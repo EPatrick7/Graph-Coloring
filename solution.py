@@ -20,24 +20,12 @@ def set_new_color(vertex:Vertex,graph:Graph):
     vertex.color=graph.colors_used-1
 
 def algorithm(graph:Graph):
-
-    #Run the greedy algorithm once.
-    for vertex in graph.vertices:
-        options=allowed_colors(vertex,graph)
-        if len(options)==0:
-            set_new_color(vertex,graph)
-        else:
-            vertex.color=options[0]
-        yield
+    #This is the literal worst algorithm possible.
 
     for vertex in graph.vertices:
-        if vertex.color==graph.colors_used-1:
-            vertex.color=-1
-            for edge1 in vertex.edges:
-                for edge2 in vertex.edges:
-                    if edge1!=edge2 and edge1.color==edge2.color and edge1.can_walk_to(edge2,[vertex]):
-                        print("Loop")
-        yield
+        set_new_color(vertex,graph)
+    
+    yield
     print("\nColoring Completed:\nGraph Chromatic Number Of " + str(graph.colors_used)+"\nVertex Count Of "+str(graph.vertex_count())+"\nLargest Degree Of "+str(graph.largest_degree())+"\nSmallest Degree Of "+str(graph.smallest_degree()))
 
 
