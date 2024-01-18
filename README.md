@@ -13,4 +13,3 @@ In addition to randomly generated undirected graphs, this project also includes 
 
 **In-progress coloring of the US map. (Actually finding the most optimal coloring would take years, but this visualizer shows interim results)**
 ![Visualized Map Of The US (In Progress)](https://drive.google.com/uc?id=1MEbJ18bSoYqIrbN2iH4gFSn6yUXfOmnu)
-![image](https://github.com/EPatrick7/Graph-Coloring/assets/88292909/eaa88ad0-9901-4a30-8f45-6dee34dfc2d0)
