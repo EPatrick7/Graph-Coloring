@@ -240,8 +240,11 @@ def gen_graph(vertex_count:int,max_edges:int):
         distances.sort(key=lambda x: x[1])
 
         # Add edges to closest vertices
-        for i in range(min(targ_amount, len(distances))):
-            vertex.add_edge(distances[i][0])
+        i=0
+        while len(vertex.edges) < targ_amount and len(distances) > i:
+            if len(distances[i][0].edges) < distances[i][0]._targ_amount:
+                vertex.add_edge(distances[i][0])
+            i+=1
     if not is_connected(graph.vertices):
         return gen_graph(vertex_count,max_edges)
     else:
@@ -255,7 +258,10 @@ def gen_graph(vertex_count:int,max_edges:int):
 
         return graph
 if __name__=="__main__":
-    gen_run(20,4,simulate.breadth_first)
+
+    #Max Degree <=5, Chromatic Number <=4
+    
+    gen_run(25,5,simulate.breadth_first)
     #run(gen_graph(15,2),simulate.breadth_first)
     
     #single_render(gen_graph(10,3))
