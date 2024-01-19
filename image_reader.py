@@ -11,6 +11,7 @@ class Continent:
         self.avg_pos=(0,0)
         self.real_value=None
         self.neighbors=set()
+        self.color=None
     def real(self):
         if self.real_value is self:
             raise ValueError("Real Value Cannot Be Self!")
@@ -21,9 +22,9 @@ class Continent:
     def pos(self):
         return Vector2(self.avg_pos[0]*4,self.avg_pos[1]*4)
     def add_pixel(self,pos:tuple):
-        self.pixels[pos]=True
-
-
+        self.pixels[(pos[0],pos[1])]=True
+        if len(pos) > 2:
+            self.color=pos[2]
         if len(self.pixels)==0:
             self.avg_pos=pos
         else:
@@ -48,7 +49,10 @@ class Continent:
         continent.real_value=self.real()
         self.neighbors|=continent.neighbors
     def has_pixel(self,pos:tuple):
-        return pos in self.pixels
+        if len(pos)>2:
+            return (pos[0],pos[1]) in self.pixels and pos[2] ==self.color
+            
+        return (pos[0],pos[1]) in self.pixels
 class World:
     def __init__(self):
         self.continents=[]
@@ -74,29 +78,29 @@ class World:
                 i=0
                 for c in self.continents:
                     if added is None:
-                        if c.has_pixel((pos[0],pos[1]+1)):
+                        if c.has_pixel((pos[0],pos[1]+1,pos[2])):
                             c.add_pixel(pos)
                             added=c
-                        elif c.has_pixel((pos[0]-1,pos[1])):
+                        elif c.has_pixel((pos[0]-1,pos[1],pos[2])):
                             c.add_pixel(pos)
                             added=c
-                        elif c.has_pixel((pos[0]+1,pos[1])):
+                        elif c.has_pixel((pos[0]+1,pos[1],pos[2])):
                             c.add_pixel(pos)
                             added=c
-                        elif c.has_pixel((pos[0],pos[1]-1)):
+                        elif c.has_pixel((pos[0],pos[1]-1,pos[2])):
                             c.add_pixel(pos)
                             added=c
                     else:
-                        if c.has_pixel((pos[0],pos[1]+1)):
+                        if c.has_pixel((pos[0],pos[1]+1,pos[2])):
                             added.merge_continent(self.continents.pop(i))
                             i-=1
-                        elif c.has_pixel((pos[0]-1,pos[1])):
+                        elif c.has_pixel((pos[0]-1,pos[1],pos[2])):
                             added.merge_continent(self.continents.pop(i))
                             i-=1
-                        elif c.has_pixel((pos[0]+1,pos[1])):
+                        elif c.has_pixel((pos[0]+1,pos[1],pos[2])):
                             added.merge_continent(self.continents.pop(i))
                             i-=1
-                        elif c.has_pixel((pos[0],pos[1]-1)):
+                        elif c.has_pixel((pos[0],pos[1]-1,pos[2])):
                             added.merge_continent(self.continents.pop(i))
                             i-=1
                         
@@ -118,16 +122,16 @@ class World:
                     i=0
                     for c in self.continents:
                         if c !=cn:
-                            if c.has_pixel((pos[0],pos[1]+1)):
+                            if c.has_pixel((pos[0],pos[1]+1,pos[2])):
                                 cn.merge_continent(self.continents.pop(i))
                                 i-=1
-                            elif c.has_pixel((pos[0]-1,pos[1])):
+                            elif c.has_pixel((pos[0]-1,pos[1],pos[2])):
                                 cn.merge_continent(self.continents.pop(i))
                                 i-=1
-                            elif c.has_pixel((pos[0]+1,pos[1])):
+                            elif c.has_pixel((pos[0]+1,pos[1],pos[2])):
                                 cn.merge_continent(self.continents.pop(i))
                                 i-=1
-                            elif c.has_pixel((pos[0],pos[1]-1)):
+                            elif c.has_pixel((pos[0],pos[1]-1,pos[2])):
                                 cn.merge_continent(self.continents.pop(i))
                                 i-=1
                         i+=1
@@ -159,29 +163,53 @@ class World:
                 i=0
                 for c in self.bridges:
                     if added is None:
-                        if c.has_pixel((pos[0],pos[1]+1)):
+                        if c.has_pixel((pos[0],pos[1]+1,pos[2])):
                             c.add_pixel(pos)
                             added=c
-                        elif c.has_pixel((pos[0]-1,pos[1])):
+                        elif c.has_pixel((pos[0]-1,pos[1],pos[2])):
                             c.add_pixel(pos)
                             added=c
-                        elif c.has_pixel((pos[0]+1,pos[1])):
+                        elif c.has_pixel((pos[0]+1,pos[1],pos[2])):
                             c.add_pixel(pos)
                             added=c
-                        elif c.has_pixel((pos[0],pos[1]-1)):
+                        elif c.has_pixel((pos[0],pos[1]-1,pos[2])):
+                            c.add_pixel(pos)
+                            added=c
+                        elif c.has_pixel((pos[0]-1,pos[1]-1,pos[2])):
+                            c.add_pixel(pos)
+                            added=c
+                        elif c.has_pixel((pos[0]+1,pos[1]-1,pos[2])):
+                            c.add_pixel(pos)
+                            added=c
+                        elif c.has_pixel((pos[0]-1,pos[1]+1,pos[2])):
+                            c.add_pixel(pos)
+                            added=c
+                        elif c.has_pixel((pos[0]+1,pos[1]+1,pos[2])):
                             c.add_pixel(pos)
                             added=c
                     else:
-                        if c.has_pixel((pos[0],pos[1]+1)):
+                        if c.has_pixel((pos[0],pos[1]+1,pos[2])):
                             added.merge_continent(self.bridges.pop(i))
                             i-=1
-                        elif c.has_pixel((pos[0]-1,pos[1])):
+                        elif c.has_pixel((pos[0]-1,pos[1],pos[2])):
                             added.merge_continent(self.bridges.pop(i))
                             i-=1
-                        elif c.has_pixel((pos[0]+1,pos[1])):
+                        elif c.has_pixel((pos[0]+1,pos[1],pos[2])):
                             added.merge_continent(self.bridges.pop(i))
                             i-=1
-                        elif c.has_pixel((pos[0],pos[1]-1)):
+                        elif c.has_pixel((pos[0],pos[1]-1,pos[2])):
+                            added.merge_continent(self.bridges.pop(i))
+                            i-=1
+                        elif c.has_pixel((pos[0]-1,pos[1]-1,pos[2])):
+                            added.merge_continent(self.bridges.pop(i))
+                            i-=1
+                        elif c.has_pixel((pos[0]+1,pos[1]-1,pos[2])):
+                            added.merge_continent(self.bridges.pop(i))
+                            i-=1
+                        elif c.has_pixel((pos[0]-1,pos[1]+1,pos[2])):
+                            added.merge_continent(self.bridges.pop(i))
+                            i-=1
+                        elif c.has_pixel((pos[0]+1,pos[1]+1,pos[2])):
                             added.merge_continent(self.bridges.pop(i))
                             i-=1
                         
@@ -203,16 +231,28 @@ class World:
                     i=0
                     for c in self.bridges:
                         if c !=cn:
-                            if c.has_pixel((pos[0],pos[1]+1)):
+                            if c.has_pixel((pos[0],pos[1]+1,pos[2])):
                                 cn.merge_continent(self.bridges.pop(i))
                                 i-=1
-                            elif c.has_pixel((pos[0]-1,pos[1])):
+                            elif c.has_pixel((pos[0]-1,pos[1],pos[2])):
                                 cn.merge_continent(self.bridges.pop(i))
                                 i-=1
-                            elif c.has_pixel((pos[0]+1,pos[1])):
+                            elif c.has_pixel((pos[0]+1,pos[1],pos[2])):
                                 cn.merge_continent(self.bridges.pop(i))
                                 i-=1
-                            elif c.has_pixel((pos[0],pos[1]-1)):
+                            elif c.has_pixel((pos[0],pos[1]-1,pos[2])):
+                                cn.merge_continent(self.bridges.pop(i))
+                                i-=1
+                            elif c.has_pixel((pos[0]-1,pos[1]-1,pos[2])):
+                                cn.merge_continent(self.bridges.pop(i))
+                                i-=1
+                            elif c.has_pixel((pos[0]+1,pos[1]-1,pos[2])):
+                                cn.merge_continent(self.bridges.pop(i))
+                                i-=1
+                            elif c.has_pixel((pos[0]-1,pos[1]+1,pos[2])):
+                                cn.merge_continent(self.bridges.pop(i))
+                                i-=1
+                            elif c.has_pixel((pos[0]+1,pos[1]+1,pos[2])):
                                 cn.merge_continent(self.bridges.pop(i))
                                 i-=1
                         i+=1
@@ -226,6 +266,7 @@ class World:
                             added.neighbors|={c}
                         elif c.has_pixel((pos[0],pos[1]-1)):
                             added.neighbors|={c}
+                            
                 
         
 def img_to_graph(path):
@@ -242,10 +283,10 @@ def img_to_graph(path):
 
 
             if pixel_color.a != 0:
-                if pixel_color.r>=200 and pixel_color.g<=50 and pixel_color.b<=50:
-                    world.add_pixel((col,row),True)
+                if pixel_color.r>=100 and pixel_color.g<=100 and pixel_color.b<=100:
+                    world.add_pixel((col,row,(pixel_color.r,pixel_color.g,pixel_color.b,pixel_color.a)),True)
                 else:
-                    world.add_pixel((col,row),False)
+                    world.add_pixel((col,row,(pixel_color.r,pixel_color.g,pixel_color.b,pixel_color.a)),False)
                   
     graph=Graph()
     for c in world.continents:
@@ -255,7 +296,7 @@ def img_to_graph(path):
         graph.add_vertex(v)
     
     for b in world.bridges:
-    
+        
         neighbors=[]
         for el in b.real().neighbors:
             #print(el.real().pos())

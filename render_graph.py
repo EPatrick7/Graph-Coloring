@@ -259,7 +259,6 @@ def gen_graph(vertex_count:int,max_edges:int):
         return graph
 if __name__=="__main__":
 
-    #Max Degree <=5, Chromatic Number <=4
     
     gen_run(25,5,simulate.breadth_first)
     #run(gen_graph(15,2),simulate.breadth_first)
