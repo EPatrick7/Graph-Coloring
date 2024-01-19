@@ -71,6 +71,10 @@ def depth_first(graph:Graph):
         started=True
 
         while len(stack) > 0:
+            if best_state is not None:
+                if graph.colors_used >= best_state.graph.colors_used:
+                    break
+            
             v=stack.pop()
             if v in visited:
                 raise Exception("Traversal Failed!")
@@ -140,7 +144,13 @@ def breadth_first(graph:Graph):
         started=True
 
         while len(new_stack)>0 or len(stack)>0:
+            if best_state is not None:
+                if graph.colors_used >= best_state.graph.colors_used:
+                    break
             while len(stack) > 0:
+                if best_state is not None:
+                    if graph.colors_used >= best_state.graph.colors_used:
+                        break
                 v=stack.pop()
                 if v in visited:
                     raise Exception("Traversal Failed!")

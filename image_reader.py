@@ -280,6 +280,8 @@ def main():
     graph=img_to_graph("simple_map.png")
     
     render_graph.run(graph,simulate.depth_first)
+    #render_graph.run(graph,simulate.breadth_first)
+    
     #list(simulate.breadth_first(graph))
     #render_graph.single_render(graph)
 
