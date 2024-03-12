@@ -282,7 +282,7 @@ def img_to_graph(path):
             pixel_color = img.get_at((col, row))
 
 
-            if pixel_color.a != 0:
+            if pixel_color.a >= 100:
                 if pixel_color.r>=100 and pixel_color.g<=100 and pixel_color.b<=100:
                     world.add_pixel((col,row,(pixel_color.r,pixel_color.g,pixel_color.b,pixel_color.a)),True)
                 else:
@@ -315,10 +315,32 @@ def img_to_graph(path):
           #  graph.add_vertex(v)
 
     graph.vertices=sorted(graph.vertices, key=lambda vertex: len(vertex.edges), reverse=False)
-
+    for vertex in graph.vertices:
+        scale_factor=3
+        vertex.pos=Vector2(vertex.pos.x/scale_factor,vertex.pos.y/scale_factor)
     return graph
+def printcsv(graph):
+    mapping=dict()
+    numVertex=1
+    visited=[]
+    for vertex in graph.vertices:
+        if not vertex in mapping:
+            mapping[vertex]=numVertex
+            numVertex+=1
+        curVert=mapping[vertex]
+        if len(vertex.edges)==0:
+            print(curVert)
+        for edge in vertex.edges:
+            if not edge in mapping:
+                mapping[edge]=numVertex
+                numVertex+=1
+            curEdge=mapping[edge]
+            if not {curVert,curEdge} in visited:
+                print(curVert,curEdge,sep=",")
+                visited.append({curVert,curEdge})
 def main():
-    graph=img_to_graph("simple_map.png")
+    graph=img_to_graph("toxive.png")
+    printcsv(graph)
     
     render_graph.run(graph,simulate.depth_first)
     #render_graph.run(graph,simulate.breadth_first)

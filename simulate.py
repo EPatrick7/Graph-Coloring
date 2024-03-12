@@ -48,6 +48,8 @@ class SaveState:
             for ver in self.new_stack:
                 new_stack.append(ver)
 
+def sort_save_states(state):
+    return len(state.graph.colors)+(len(state.graph.vertices)-len(state.visited))
 def depth_first(graph:Graph):
     save_states=[]
     started=False
@@ -62,6 +64,7 @@ def depth_first(graph:Graph):
 
         if started:
             live=save_states.pop()
+            #print(len(save_states))
             stack.clear()
             visited.clear()
             live.load(graph,stack,visited,None)
@@ -96,6 +99,7 @@ def depth_first(graph:Graph):
             for i in range(1,len(options)):
                 v.color=options[i]
                 save_states.append(SaveState(graph,stack,visited,None))
+                save_states = sorted(save_states, key=sort_save_states, reverse=True)
                 
                 #Split save state here
 
@@ -172,6 +176,8 @@ def breadth_first(graph:Graph):
                 for i in range(1,len(options)):
                     v.color=options[i]
                     save_states.append(SaveState(graph,stack,visited,new_stack))
+                    
+                    save_states = sorted(save_states, key=sort_save_states, reverse=True)
                     
                     #Split save state here
 

@@ -260,7 +260,7 @@ def gen_graph(vertex_count:int,max_edges:int):
 if __name__=="__main__":
 
     
-    gen_run(25,5,simulate.breadth_first)
+    gen_run(50,7,simulate.breadth_first)
     #run(gen_graph(15,2),simulate.breadth_first)
     
     #single_render(gen_graph(10,3))
